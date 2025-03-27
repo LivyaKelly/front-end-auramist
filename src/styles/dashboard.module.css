@@ -1,6 +1,7 @@
 .paginaContainer {
   display: flex;
-  height: 96vh;
+  height: 100%;
+  width: 100%;
 }
 
 .conteudoPrincipal {
@@ -21,3 +22,9 @@
   color: #A7C4E7; 
 }
 
+.linhaConteudo {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}

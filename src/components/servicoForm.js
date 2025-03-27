@@ -1,87 +1,107 @@
-'use client';
-import { useState } from 'react';
-import { Form, Input, InputNumber, Button, Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { uploadImageToApi } from '@/utils/uploadImageToApi';
-
+import { useState, useEffect } from "react";
+import styles from "@/styles/servicoForm.module.css";
 
 export default function ServicoForm({ onSuccess }) {
-    const [form] = Form.useForm();
-    const [fileList, setFileList] = useState([]);
-    const [loading, setLoading] = useState(false);
-  
-    const onFinish = async (values) => {
-      try {
-        setLoading(true);
-        const file = fileList[0]?.originFileObj;
-  
-        if (!file) {
-          message.error('Selecione uma imagem.');
-          return;
-        }
-  
-        const imageUrl = await uploadImageToApi(file);
-  
-        const res = await fetch('http://localhost:3001/api/services', {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: values.name,
-            description: values.description,
-            duration: values.duration,
-            price: values.price,
-            urlImage: imageUrl,
-          }),
-        });
-  
-        if (!res.ok) throw new Error('Erro ao criar serviço');
-  
-        message.success('Serviço criado com sucesso!');
-        form.resetFields();
-        setFileList([]);
-        if (onSuccess) onSuccess();
-      } catch (error) {
-        console.error(error);
-        message.error('Erro ao criar serviço.');
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    return (
-      <Form layout="vertical" form={form} onFinish={onFinish}>
-        <Form.Item name="name" label="Nome do serviço" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-  
-        <Form.Item name="description" label="Descrição">
-          <Input.TextArea />
-        </Form.Item>
-  
-        <Form.Item name="duration" label="Duração (minutos)" rules={[{ required: true }]}>
-          <InputNumber min={1} style={{ width: '100%' }} />
-        </Form.Item>
-  
-        <Form.Item name="price" label="Preço (R$)" rules={[{ required: true }]}>
-          <InputNumber min={0} step={0.01} style={{ width: '100%' }} />
-        </Form.Item>
-  
-        <Form.Item label="Imagem do serviço" required>
-          <Upload
-            accept="image/*"
-            beforeUpload={() => false}
-            fileList={fileList}
-            onChange={({ fileList }) => setFileList(fileList)}
-          >
-            <Button icon={<UploadOutlined />}>Selecionar imagem</Button>
-          </Upload>
-        </Form.Item>
-  
-        <Button type="primary" htmlType="submit" loading={loading}>
-          Criar Serviço
-        </Button>
-      </Form>
-    );
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    duration: "",
+    price: "",
+    image: null,
+  });
+  const [servicos, setServicos] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    buscarServicos();
+  }, []);
+
+  async function buscarServicos() {
+    try {
+      const res = await fetch("http://localhost:3001/api/services/my", {
+        credentials: "include",
+      });
+      const data = await res.json();
+      setServicos(data);
+    } catch (err) {
+      console.error("Erro ao buscar serviços:", err);
+    }
   }
-  
+
+  async function uploadImage(file) {
+    const form = new FormData();
+    form.append("image", file);
+
+    const res = await fetch("http://localhost:3001/api/upload-image", {
+      method: "POST",
+      body: form,
+    });
+
+    if (!res.ok) throw new Error("Erro ao enviar imagem");
+
+    const data = await res.json();
+    return data.url;
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const imageUrl = await uploadImage(formData.image);
+
+      const res = await fetch("http://localhost:3001/api/services", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          name: formData.name,
+          description: formData.description,
+          duration: Number(formData.duration),
+          price: Number(formData.price),
+          urlImage: imageUrl,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Erro ao criar serviço");
+
+      setFormData({
+        name: "",
+        description: "",
+        duration: "",
+        price: "",
+        image: null,
+      });
+      buscarServicos();
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className={styles.container}>
+      <h2>Cadastrar Novo Serviço</h2>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        {/* campos */}
+        <input className={styles.input} type="text" placeholder="Nome do serviço" required value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+        <textarea className={styles.input} placeholder="Descrição" required value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+        <input className={styles.input} type="number" placeholder="Duração (min)" required value={formData.duration}
+          onChange={(e) => setFormData({ ...formData, duration: e.target.value })} />
+        <input className={styles.input} type="number" placeholder="Preço (R$)" required value={formData.price}
+          onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
+        <input className={styles.input} type="file" accept="image/*" required onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })} />
+
+        <button type="submit" disabled={loading} className={styles.button}>
+          {loading ? "Enviando..." : "Cadastrar Serviço"}
+        </button>
+      </form>
+
+      <hr className={styles.hr}/>
+
+    </div>
+  );
+}

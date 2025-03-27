@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import SideBar from "@/components/sideBarProfessional";
 import styles from "@/styles/dashboard.module.css";
 import ServicoForm from "@/components/servicoForm";
-// import FormProfServico from "@/components/formProfServico";
+import ListaServicos from "@/components/listaServicos";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -62,22 +62,12 @@ export default function Dashboard() {
       <SideBar />
       <div className={styles.conteudoPrincipal}>
         <div className={styles.saudacaoCentralizada}>
-          <p>
-            Olá, <span className={styles.nomeDestaque}>{firstName}</span>
-          </p>
+          <p>Olá, <span className={styles.nomeDestaque}>{firstName}</span></p>
         </div>
 
-        <ServicoForm onSuccess={() => console.log('Serviço criado!')} />
-        <div>
-          <h2>Seus Serviços Cadastrados</h2>
-          <ul>
-            {servicos.map((servico) => (
-              <li key={servico.id}>
-                <strong>{servico.name}</strong> - R$ {servico.price} (
-                {servico.duration} min)
-              </li>
-            ))}
-          </ul>
+        <div className={styles.linhaConteudo}>
+          <ServicoForm onSuccess={() => console.log("Serviço criado!")} />
+          <ListaServicos />
         </div>
       </div>
     </div>
