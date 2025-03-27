@@ -2,32 +2,38 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import SideBar from "@/components/sideBarProfessional";
 import styles from "@/styles/dashboard.module.css";
-import FormProfServico from "@/components/formProfServico";
+import ServicoForm from "@/components/servicoForm";
+// import FormProfServico from "@/components/formProfServico";
 
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [loading, setLoading] = useState(true);
-
   const [servicos, setServicos] = useState([]);
 
   useEffect(() => {
-    const buscarServicos = async () => {
-      const res = await fetch("http://localhost:3001/api/services/by-user", {
-        credentials: "include"
-      });      
+    async function fetchServices() {
+      try {
+        const res = await fetch('http://localhost:3001/api/services/my', {
+          method: 'GET',
+          credentials: 'include', 
+        });
 
-      if (res.ok) {
+        if (!res.ok) throw new Error('Erro ao buscar serviços');
+
         const data = await res.json();
         setServicos(data);
-      } else {
-        console.error("Erro ao buscar serviços");
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-    };
+    }
 
-    buscarServicos();
+    fetchServices();
   }, []);
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -61,7 +67,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <FormProfServico />
+        <ServicoForm onSuccess={() => console.log('Serviço criado!')} />
         <div>
           <h2>Seus Serviços Cadastrados</h2>
           <ul>

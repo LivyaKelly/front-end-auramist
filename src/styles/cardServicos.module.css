@@ -1,73 +1,72 @@
 .tituloServicos {
-    color: black;
-    margin-bottom: 30px;
-    font-size: 24px;
-  }
-  
-  .listaServicos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-  }
-  
-  .cartaoServico {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 0;
-  }
-  
-  .imagemCard {
-    border-radius: 12px 12px 0 0;
-    object-fit: cover;
-  }
-  
-  .cardContent {
-    padding: 16px;
-  }
-  
-  .nomeServico {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0 0 10px;
-  }
-  
-  .descricaoServico {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 12px;
-  }
-  
-  .infoBottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-  
-  .preco {
-    font-size: 18px;
-    font-weight: bold;
-    color: #000;
-  }
-  
-  .tempo {
-    font-size: 14px;
-    color: #888;
-  }
-  
-  .btnReservar {
-    width: 100%;
-    background-color: #a8cfff;
-    border: none;
-    color: white;
-    font-weight: bold;
-    border-radius: 8px;
-    padding: 8px 0;
-    transition: 0.3s;
-  }
-  
-  .btnReservar:hover {
-    background-color: #7ebfff;
-  }
-  
+  color: black;
+  margin-bottom: 30px;
+  font-size: 24px;
+}
+
+.listaServicos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.cartaoServico {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 0;
+}
+
+.imagemCard {
+  border-radius: 12px 12px 0 0;
+  object-fit: cover;
+}
+
+.cardContent {
+  padding: 16px;
+}
+
+.nomeServico {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+
+.descricaoServico {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.infoBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.preco {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+.tempo {
+  font-size: 14px;
+  color: #888;
+}
+
+.btnReservar {
+  width: 100%;
+  background-color: #a8cfff;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 8px 0;
+  transition: 0.3s;
+}
+
+.btnReservar:hover {
+  background-color: #7ebfff;
+}

@@ -196,10 +196,6 @@ export default function CardServicos() {
           <strong>Valor Total:</strong> R${" "}
           {servicoSelecionado?.price.toFixed(2)}
         </p>
-        <p>
-          <strong>Informações Adicionais:</strong> [ Anotações ou Observações do
-          Cliente, se houver ]
-        </p>
         <p style={{ marginTop: 16 }}>
           ✨ Estamos ansiosos para cuidar de você! 🥰💇‍♀️
         </p>
